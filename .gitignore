@@ -1,0 +1,16 @@
+# ambiente virtual 
+venv/
+
+# arquivos python  compilados 
+__pycache__/
+*.pyc
+
+#arquivos de sistema
+.DS_store 
+
+#arquivos de IDE
+.vscode/
+.idea/
+#logs
+*.log
+
