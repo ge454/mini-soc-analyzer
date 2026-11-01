@@ -1,0 +1,26 @@
+Nov 01 08:05:00 servidor sshd[2824]: Accepted password for geovani from 192.0.2.10 port 40819 ssh2
+Nov 01 08:20:00 servidor sshd[5506]: Failed password for maria from 192.0.2.11 port 48024 ssh2
+Nov 01 08:20:15 servidor sshd[4657]: Failed password for maria from 192.0.2.11 port 44572 ssh2
+Nov 01 08:20:40 servidor sshd[2679]: Accepted password for maria from 192.0.2.11 port 57870 ssh2
+Nov 01 08:45:00 servidor sshd[7912]: Failed password for invalid user admin from 203.0.113.45 port 41041 ssh2
+Nov 01 08:45:09 servidor sshd[2535]: Failed password for invalid user admin from 203.0.113.45 port 47164 ssh2
+Nov 01 08:45:18 servidor sshd[9279]: Failed password for invalid user root from 203.0.113.45 port 59726 ssh2
+Nov 01 08:45:27 servidor sshd[4257]: Failed password for invalid user admin from 203.0.113.45 port 57856 ssh2
+Nov 01 08:45:36 servidor sshd[4611]: Failed password for invalid user oracle from 203.0.113.45 port 54719 ssh2
+Nov 01 08:45:45 servidor sshd[5557]: Failed password for invalid user ubuntu from 203.0.113.45 port 40212 ssh2
+Nov 01 08:45:54 servidor sshd[7924]: Failed password for invalid user root from 203.0.113.45 port 51149 ssh2
+Nov 01 08:46:03 servidor sshd[3547]: Failed password for invalid user test from 203.0.113.45 port 47055 ssh2
+Nov 01 08:46:12 servidor sshd[2674]: Failed password for invalid user test from 203.0.113.45 port 43039 ssh2
+Nov 01 08:46:21 servidor sshd[2584]: Failed password for invalid user oracle from 203.0.113.45 port 51763 ssh2
+Nov 01 08:46:30 servidor sshd[5333]: Failed password for invalid user test from 203.0.113.45 port 41423 ssh2
+Nov 01 08:46:39 servidor sshd[9785]: Failed password for invalid user oracle from 203.0.113.45 port 44090 ssh2
+Nov 01 08:46:48 servidor sshd[2291]: Failed password for invalid user oracle from 203.0.113.45 port 58089 ssh2
+Nov 01 08:46:57 servidor sshd[6925]: Failed password for invalid user test from 203.0.113.45 port 58918 ssh2
+Nov 01 08:47:10 servidor sshd[4150]: Accepted password for admin from 203.0.113.45 port 42279 ssh2
+Nov 01 10:00:00 servidor sshd[4733]: Failed password for invalid user admin from 198.51.100.23 port 49482 ssh2
+Nov 01 10:00:20 servidor sshd[4814]: Failed password for invalid user admin from 198.51.100.23 port 43309 ssh2
+Nov 01 10:00:40 servidor sshd[5554]: Failed password for invalid user oracle from 198.51.100.23 port 54857 ssh2
+Nov 01 10:01:00 servidor sshd[3664]: Failed password for invalid user test from 198.51.100.23 port 52130 ssh2
+Nov 01 10:01:20 servidor sshd[4432]: Failed password for invalid user test from 198.51.100.23 port 48748 ssh2
+Nov 01 10:01:40 servidor sshd[3803]: Failed password for invalid user admin from 198.51.100.23 port 57502 ssh2
+Nov 01 10:02:00 servidor sshd[3677]: Failed password for invalid user root from 198.51.100.23 port 55147 ssh2
