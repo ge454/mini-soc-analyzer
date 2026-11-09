@@ -1,0 +1,23 @@
+=== MINI SOC ANALYZER v2 ===
+Ano inicial assumido: 2026; offset assumido: -03:00; virada: False
+Regra: >= 3 falhas por host/IP em 300s (bordas inclusivas)
+Login posterior: >= 3 falhas do mesmo host/IP/usuário em 300s
+Eventos: 26; linhas rejeitadas: 0; alertas: 3
+Alertas indicam suspeita; não comprovam comprometimento.
+[SUSPEITA:brute_force] servidor 203.0.113.45 em 2026-11-01T11:45:18+00:00
+  Motivo: 3 falhas na janela da regra; usuários: admin, root
+  sample_logs/auth.log:5: Nov 01 08:45:00 servidor sshd[7912]: Failed password for invalid user admin from 203.0.113.45 port 41041 ssh2
+  sample_logs/auth.log:6: Nov 01 08:45:09 servidor sshd[2535]: Failed password for invalid user admin from 203.0.113.45 port 47164 ssh2
+  sample_logs/auth.log:7: Nov 01 08:45:18 servidor sshd[9279]: Failed password for invalid user root from 203.0.113.45 port 59726 ssh2
+[SUSPEITA:success_after_failures] servidor 203.0.113.45 em 2026-11-01T11:47:10+00:00
+  Login após falhas para admin; investigar.
+  Motivo: 3 falhas na janela da regra; usuários: admin
+  sample_logs/auth.log:5: Nov 01 08:45:00 servidor sshd[7912]: Failed password for invalid user admin from 203.0.113.45 port 41041 ssh2
+  sample_logs/auth.log:6: Nov 01 08:45:09 servidor sshd[2535]: Failed password for invalid user admin from 203.0.113.45 port 47164 ssh2
+  sample_logs/auth.log:8: Nov 01 08:45:27 servidor sshd[4257]: Failed password for invalid user admin from 203.0.113.45 port 57856 ssh2
+  Login: sample_logs/auth.log:19: Nov 01 08:47:10 servidor sshd[4150]: Accepted password for admin from 203.0.113.45 port 42279 ssh2
+[SUSPEITA:brute_force] servidor 198.51.100.23 em 2026-11-01T13:00:40+00:00
+  Motivo: 3 falhas na janela da regra; usuários: admin, oracle
+  sample_logs/auth.log:20: Nov 01 10:00:00 servidor sshd[4733]: Failed password for invalid user admin from 198.51.100.23 port 49482 ssh2
+  sample_logs/auth.log:21: Nov 01 10:00:20 servidor sshd[4814]: Failed password for invalid user admin from 198.51.100.23 port 43309 ssh2
+  sample_logs/auth.log:22: Nov 01 10:00:40 servidor sshd[5554]: Failed password for invalid user oracle from 198.51.100.23 port 54857 ssh2

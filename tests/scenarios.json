@@ -1,0 +1,23 @@
+{
+  "synthetic": true,
+  "year": 2026,
+  "offset": "+00:00",
+  "threshold": 3,
+  "window_seconds": 60,
+  "cases": [
+    {"name": "benigno", "seconds": [0, 10], "expected_evidence": []},
+    {"name": "falhas_esparsas", "seconds": [0, 61, 122], "expected_evidence": []},
+    {"name": "rajada", "seconds": [0, 10, 20], "expected_evidence": [[1, 2, 3]]},
+    {"name": "varios_usuarios", "seconds": [0, 10, 20], "users": ["ana", "root", "test"], "expected_evidence": [[1, 2, 3]]},
+    {"name": "borda_inclusiva", "seconds": [0, 30, 60], "expected_evidence": [[1, 2, 3]]},
+    {"name": "fora_por_um_segundo", "seconds": [0, 30, 61], "expected_evidence": []},
+    {"name": "fora_de_ordem", "seconds": [20, 0, 10], "expected_evidence": [[2, 3, 1]]},
+    {"name": "ips_separados", "seconds": [0, 10, 20], "ips": ["192.0.2.1", "192.0.2.2", "192.0.2.1"], "expected_evidence": []},
+    {"name": "hosts_separados", "seconds": [0, 10, 20], "hosts": ["lab-a", "lab-b", "lab-a"], "expected_evidence": []},
+    {"name": "rajada_continua_um_alerta", "seconds": [0, 10, 20, 30, 40], "expected_evidence": [[1, 2, 3]]},
+    {"name": "segunda_rajada", "seconds": [0, 10, 20, 100, 110, 120], "expected_evidence": [[1, 2, 3], [4, 5, 6]]},
+    {"name": "sucesso_nao_e_falha", "seconds": [0, 10, 20], "actions": ["Failed password", "Accepted password", "Failed password"], "expected_evidence": []},
+    {"name": "sucesso_posterior_correlacionado", "seconds": [0, 10, 20, 30], "actions": ["Failed password", "Failed password", "Failed password", "Accepted publickey"], "expected_evidence": [[1, 2, 3], [1, 2, 3]], "expected_rules": ["brute_force", "success_after_failures"]},
+    {"name": "mesmo_instante", "seconds": [0, 0, 0], "expected_evidence": [[1, 2, 3]]}
+  ]
+}

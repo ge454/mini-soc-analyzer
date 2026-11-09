@@ -1,0 +1,170 @@
+{
+  "schema_version": "0.2",
+  "source": "sample_logs/auth.log",
+  "parameters": {
+    "initial_year": 2026,
+    "assumed_utc_offset": "-03:00",
+    "allow_year_rollover": false,
+    "threshold": 3,
+    "window_seconds": 300,
+    "login_window_seconds": 300
+  },
+  "events_count": 26,
+  "rejected_lines": [],
+  "alerts": [
+    {
+      "rule": "brute_force",
+      "timestamp": "2026-11-01T11:45:18+00:00",
+      "host": "servidor",
+      "ip": "203.0.113.45",
+      "user": null,
+      "reason": "limiar de falhas por host/IP na janela",
+      "failure_count": 3,
+      "evidence": [
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 5,
+          "timestamp": "2026-11-01T11:45:00+00:00",
+          "host": "servidor",
+          "ip": "203.0.113.45",
+          "user": "admin",
+          "kind": "failure",
+          "raw": "Nov 01 08:45:00 servidor sshd[7912]: Failed password for invalid user admin from 203.0.113.45 port 41041 ssh2"
+        },
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 6,
+          "timestamp": "2026-11-01T11:45:09+00:00",
+          "host": "servidor",
+          "ip": "203.0.113.45",
+          "user": "admin",
+          "kind": "failure",
+          "raw": "Nov 01 08:45:09 servidor sshd[2535]: Failed password for invalid user admin from 203.0.113.45 port 47164 ssh2"
+        },
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 7,
+          "timestamp": "2026-11-01T11:45:18+00:00",
+          "host": "servidor",
+          "ip": "203.0.113.45",
+          "user": "root",
+          "kind": "failure",
+          "raw": "Nov 01 08:45:18 servidor sshd[9279]: Failed password for invalid user root from 203.0.113.45 port 59726 ssh2"
+        }
+      ],
+      "trigger": {
+        "source": "sample_logs/auth.log",
+        "line_number": 7,
+        "timestamp": "2026-11-01T11:45:18+00:00",
+        "host": "servidor",
+        "ip": "203.0.113.45",
+        "user": "root",
+        "kind": "failure",
+        "raw": "Nov 01 08:45:18 servidor sshd[9279]: Failed password for invalid user root from 203.0.113.45 port 59726 ssh2"
+      }
+    },
+    {
+      "rule": "success_after_failures",
+      "timestamp": "2026-11-01T11:47:10+00:00",
+      "host": "servidor",
+      "ip": "203.0.113.45",
+      "user": "admin",
+      "reason": "login após falhas do mesmo host/IP/usuário; investigar",
+      "failure_count": 3,
+      "evidence": [
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 5,
+          "timestamp": "2026-11-01T11:45:00+00:00",
+          "host": "servidor",
+          "ip": "203.0.113.45",
+          "user": "admin",
+          "kind": "failure",
+          "raw": "Nov 01 08:45:00 servidor sshd[7912]: Failed password for invalid user admin from 203.0.113.45 port 41041 ssh2"
+        },
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 6,
+          "timestamp": "2026-11-01T11:45:09+00:00",
+          "host": "servidor",
+          "ip": "203.0.113.45",
+          "user": "admin",
+          "kind": "failure",
+          "raw": "Nov 01 08:45:09 servidor sshd[2535]: Failed password for invalid user admin from 203.0.113.45 port 47164 ssh2"
+        },
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 8,
+          "timestamp": "2026-11-01T11:45:27+00:00",
+          "host": "servidor",
+          "ip": "203.0.113.45",
+          "user": "admin",
+          "kind": "failure",
+          "raw": "Nov 01 08:45:27 servidor sshd[4257]: Failed password for invalid user admin from 203.0.113.45 port 57856 ssh2"
+        }
+      ],
+      "trigger": {
+        "source": "sample_logs/auth.log",
+        "line_number": 19,
+        "timestamp": "2026-11-01T11:47:10+00:00",
+        "host": "servidor",
+        "ip": "203.0.113.45",
+        "user": "admin",
+        "kind": "success",
+        "raw": "Nov 01 08:47:10 servidor sshd[4150]: Accepted password for admin from 203.0.113.45 port 42279 ssh2"
+      }
+    },
+    {
+      "rule": "brute_force",
+      "timestamp": "2026-11-01T13:00:40+00:00",
+      "host": "servidor",
+      "ip": "198.51.100.23",
+      "user": null,
+      "reason": "limiar de falhas por host/IP na janela",
+      "failure_count": 3,
+      "evidence": [
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 20,
+          "timestamp": "2026-11-01T13:00:00+00:00",
+          "host": "servidor",
+          "ip": "198.51.100.23",
+          "user": "admin",
+          "kind": "failure",
+          "raw": "Nov 01 10:00:00 servidor sshd[4733]: Failed password for invalid user admin from 198.51.100.23 port 49482 ssh2"
+        },
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 21,
+          "timestamp": "2026-11-01T13:00:20+00:00",
+          "host": "servidor",
+          "ip": "198.51.100.23",
+          "user": "admin",
+          "kind": "failure",
+          "raw": "Nov 01 10:00:20 servidor sshd[4814]: Failed password for invalid user admin from 198.51.100.23 port 43309 ssh2"
+        },
+        {
+          "source": "sample_logs/auth.log",
+          "line_number": 22,
+          "timestamp": "2026-11-01T13:00:40+00:00",
+          "host": "servidor",
+          "ip": "198.51.100.23",
+          "user": "oracle",
+          "kind": "failure",
+          "raw": "Nov 01 10:00:40 servidor sshd[5554]: Failed password for invalid user oracle from 198.51.100.23 port 54857 ssh2"
+        }
+      ],
+      "trigger": {
+        "source": "sample_logs/auth.log",
+        "line_number": 22,
+        "timestamp": "2026-11-01T13:00:40+00:00",
+        "host": "servidor",
+        "ip": "198.51.100.23",
+        "user": "oracle",
+        "kind": "failure",
+        "raw": "Nov 01 10:00:40 servidor sshd[5554]: Failed password for invalid user oracle from 198.51.100.23 port 54857 ssh2"
+      }
+    }
+  ],
+  "limitation": "Alertas indicam suspeita; não comprovam comprometimento."
+}

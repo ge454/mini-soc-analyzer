@@ -1,5 +1,9 @@
 # Mini SOC Analyzer
 
+> **Evolução v2 em andamento:** acompanhe o [checklist do projeto](CHECKLIST.md)
+> e os [comandos atuais da v2](README-v2.md). O conteúdo abaixo descreve a versão
+> inicial acumulada; para a CLI atual, use os parâmetros de ano e fuso da v2.
+
 Ferramenta em Python que analisa logs de autenticação SSH e detecta possíveis
 ataques de força bruta. Projeto de estudo, feito para praticar análise de
 eventos de segurança (visão de SOC / blue team).

@@ -83,7 +83,7 @@ def montar_relatorio(falhas, comprometimentos, limite):
     return "\n".join(linhas)
 
 
-def main():
+def main_baseline():
     parser = argparse.ArgumentParser(description="Detecta tentativas de força bruta em logs SSH.")
     parser.add_argument("--log", default="sample_logs/auth.log", help="caminho do arquivo de log")
     parser.add_argument("--limite", type=int, default=5, help="falhas por IP para considerar suspeito")
@@ -101,4 +101,6 @@ def main():
 
 
 if __name__ == "__main__":
+    # A contagem acumulada acima permanece como baseline de comparação.
+    from temporal import main
     main()

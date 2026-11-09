@@ -1,0 +1,153 @@
+"""Variante anterior arquivada; não é ponto de entrada executável do projeto."""
+
+import argparse
+from collections import defaultdict, deque
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+from ipaddress import ip_address
+import json
+from pathlib import Path
+import re
+
+
+MONTHS = {name: i for i, name in enumerate(
+    'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(), 1)}
+LINE = re.compile(
+    r'^(?P<month>[A-Za-z]{3})\s+(?P<day>\d{1,2})\s+'
+    r'(?P<hour>\d{2}):(?P<minute>\d{2}):(?P<second>\d{2})\s+'
+    r'(?P<host>\S+) sshd\[\d+\]: '
+    r'(?P<action>Failed password|Accepted password|Accepted publickey) for '
+    r'(?:invalid user )?(?P<user>\S+) from (?P<ip>\S+) port \d+\b.*$')
+
+
+@dataclass(frozen=True)
+class Event:
+    timestamp: datetime
+    host: str
+    ip: str
+    user: str
+    kind: str
+    line: int
+    raw: str
+
+
+def parse_offset(value):
+    """Deslocamento fixo informado pelo operador, sem inferir fuso."""
+    if not re.fullmatch(r'[+-]\d{2}:\d{2}', value):
+        raise ValueError('deslocamento deve usar +HH:MM ou -HH:MM')
+    hours, minutes = map(int, value[1:].split(':'))
+    if hours > 23 or minutes > 59:
+        raise ValueError('deslocamento UTC inválido')
+    return timezone(timedelta(minutes=(hours * 60 + minutes) *
+                              (-1 if value[0] == '-' else 1)))
+
+
+def parse_lines(lines, year, offset, rollover=False):
+    """Retorna eventos ordenados e rejeições; recuos válidos são fatais."""
+    datetime(year, 1, 1)  # valida inclusive arquivos vazios
+    zone = parse_offset(offset)
+    events, rejected = [], []
+    previous = None
+    for number, raw in enumerate(lines, 1):
+        raw = raw.rstrip('\r\n')
+        match = LINE.fullmatch(raw)
+        if not match:
+            rejected.append({'line': number, 'reason': 'formato não reconhecido'})
+            continue
+        data = match.groupdict()
+        candidate_year = year
+        try:
+            month = MONTHS[data['month']]
+            address = str(ip_address(data['ip']))
+            if previous and previous.month == 12 and month == 1 and rollover:
+                candidate_year += 1
+            timestamp = datetime(candidate_year, month, int(data['day']),
+                                 int(data['hour']), int(data['minute']),
+                                 int(data['second']), tzinfo=zone)
+        except (ValueError, KeyError) as exc:
+            rejected.append({'line': number, 'reason': f'IP ou data inválidos: {exc}'})
+            continue
+        if previous and timestamp < previous:
+            raise ValueError(f'linha {number}: evento fora de ordem; confira ano/virada')
+        year = candidate_year
+        previous = timestamp
+        events.append(Event(timestamp, data['host'], address, data['user'],
+                            'failure' if data['action'].startswith('Failed') else 'success',
+                            number, raw))
+    return events, rejected
+
+
+def detect(events, threshold=5, window_seconds=60):
+    """Janela inclusiva por host/IP; sucesso exige o mesmo usuário."""
+    if threshold < 1 or window_seconds < 1:
+        raise ValueError('limite e janela devem ser positivos')
+    window = timedelta(seconds=window_seconds)
+    queues = defaultdict(deque)
+    alerts = []
+    previous = None
+    for event in events:
+        if previous and event.timestamp < previous:
+            raise ValueError('eventos fora de ordem')
+        previous = event.timestamp
+        queue = queues[event.host, event.ip]
+        while queue and event.timestamp - queue[0].timestamp > window:
+            queue.popleft()
+        count_before = len(queue)
+        if event.kind == 'failure':
+            queue.append(event)
+            if count_before < threshold <= len(queue):
+                alerts.append(make_alert('brute_force', event, list(queue)))
+        elif event.kind == 'success':
+            same_user = [failure for failure in queue if failure.user == event.user]
+            if len(same_user) >= threshold:
+                alerts.append(make_alert('success_after_failures', event, same_user))
+        else:
+            raise ValueError(f'tipo de evento desconhecido: {event.kind}')
+    return alerts
+
+
+def make_alert(rule, event, failures):
+    return {'rule': rule, 'timestamp': event.timestamp.isoformat(),
+            'host': event.host, 'ip': event.ip,
+            'user': event.user if event.kind == 'success' else None,
+            'failure_count': len(failures),
+            'evidence_lines': [failure.line for failure in failures],
+            'trigger_line': event.line,
+            'reason': ('limite de falhas na janela por host/IP' if rule == 'brute_force'
+                       else 'login após falhas do mesmo host/IP/usuário na janela')}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--log', default='sample_logs/auth.log')
+    parser.add_argument('--year', type=int, required=True, help='ano inicial do log')
+    parser.add_argument('--utc-offset', required=True, help='ex.: --utc-offset=-03:00')
+    parser.add_argument('--allow-year-rollover', action='store_true')
+    parser.add_argument('--limite', type=int, default=5)
+    parser.add_argument('--janela', type=int, default=60, help='segundos, inclusivos')
+    parser.add_argument('--json', dest='json_path', help='salvar relatório JSON')
+    args = parser.parse_args()
+    try:
+        with open(args.log, encoding='utf-8', errors='strict') as stream:
+            events, rejected = parse_lines(stream, args.year, args.utc_offset,
+                                           args.allow_year_rollover)
+        alerts = detect(events, args.limite, args.janela)
+        report = {'schema_version': '0.1', 'source': str(args.log),
+                  'parameters': {'initial_year': args.year, 'utc_offset': args.utc_offset,
+                                 'allow_year_rollover': args.allow_year_rollover,
+                                 'threshold': args.limite, 'window_seconds': args.janela},
+                  'events_count': len(events), 'rejected_lines': rejected,
+                  'alerts': alerts}
+        output = json.dumps(report, ensure_ascii=False, indent=2)
+        if args.json_path:
+            if Path(args.json_path).resolve() == Path(args.log).resolve():
+                raise ValueError('a saída não pode sobrescrever o log de entrada')
+            with open(args.json_path, 'x', encoding='utf-8') as target:
+                target.write(output + '\n')
+        print(output)
+    except (OSError, ValueError, UnicodeError, OverflowError) as exc:
+        parser.exit(2, f'Erro: {exc}\n')
+
+
+if __name__ == '__main__':
+    main()

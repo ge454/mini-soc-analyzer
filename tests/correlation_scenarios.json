@@ -1,0 +1,20 @@
+{
+  "synthetic": true,
+  "threshold": 3,
+  "window_seconds": 60,
+  "cases": [
+    {"name": "mesmo_usuario", "seconds": [0, 10, 20, 30], "expected_login_evidence": [[1, 2, 3]]},
+    {"name": "outro_usuario", "seconds": [0, 10, 20, 30], "users": ["ana", "ana", "ana", "root"], "expected_login_evidence": []},
+    {"name": "outro_host", "seconds": [0, 10, 20, 30], "hosts": ["lab-a", "lab-a", "lab-a", "lab-b"], "expected_login_evidence": []},
+    {"name": "outro_ip", "seconds": [0, 10, 20, 30], "ips": ["192.0.2.1", "192.0.2.1", "192.0.2.1", "192.0.2.2"], "expected_login_evidence": []},
+    {"name": "falhas_de_varios_usuarios_nao_somam_para_login", "seconds": [0, 10, 20, 30], "users": ["ana", "root", "ana", "ana"], "expected_login_evidence": []},
+    {"name": "login_na_borda", "seconds": [0, 10, 20, 60], "expected_login_evidence": [[1, 2, 3]]},
+    {"name": "uma_falha_expirada", "seconds": [0, 10, 20, 61], "expected_login_evidence": []},
+    {"name": "todas_expiradas", "seconds": [0, 10, 20, 81], "expected_login_evidence": []},
+    {"name": "sucesso_antes_das_falhas", "seconds": [0, 10, 20, 30], "actions": ["Accepted password", "Failed password", "Failed password", "Failed password"], "expected_login_evidence": []},
+    {"name": "empate_sucesso_depois", "seconds": [0, 0, 0, 0], "expected_login_evidence": [[1, 2, 3]]},
+    {"name": "empate_sucesso_antes", "seconds": [0, 0, 0, 0], "actions": ["Accepted password", "Failed password", "Failed password", "Failed password"], "expected_login_evidence": []},
+    {"name": "janela_login_independente", "seconds": [0, 50, 100, 110], "login_window_seconds": 120, "expected_login_evidence": [[1, 2, 3]], "expected_brute_count": 0},
+    {"name": "dois_sucessos_nao_consumem_falhas", "seconds": [0, 10, 20, 30, 40], "actions": ["Failed password", "Failed password", "Failed password", "Accepted password", "Accepted publickey"], "expected_login_evidence": [[1, 2, 3], [1, 2, 3]]}
+  ]
+}
