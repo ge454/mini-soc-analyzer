@@ -1,6 +1,6 @@
 # Checklist de evolução — Mini SOC Analyzer v2
 
-Atualizado em: 08/11/2026. Este é o acompanhamento principal **deste projeto**.
+Atualizado em: 09/11/2026. Este é o acompanhamento principal **deste projeto**.
 
 **Onde estamos:** etapas 1 e 2 concluídas no laboratório sintético; etapa 3 parcialmente
 implementada. Próxima tarefa: linha do tempo completa e exportação CSV.
@@ -70,7 +70,7 @@ produção. Não há benchmark ou métricas de qualidade independentes nesta eta
 - [ ] Preparar release e rascunho de post com resultados verificados.
 - [ ] Revisar dados e artefatos que serão compartilhados.
 - [x] Obter autorização para enviar esta etapa ao GitHub (pedido do usuário em 08/11/2026).
-- [ ] Enviar a branch `feat/temporal-detection` e confirmar o commit no remoto.
+- [x] Enviar a branch `feat/temporal-detection` e confirmar o commit no remoto (09/11/2026, via integração GitHub).
 - [ ] Obter autorização específica para release ou post, se forem solicitados depois.
 
 ## Última verificação
@@ -80,10 +80,19 @@ Comando na raiz do repositório: `python -m unittest discover -s tests -v`.
 Resultado em 08/11/2026: **17 métodos aprovados, incluindo 27 cenários sintéticos**,
 em Python 3.14.3. JSON e compatibilidade entre CLIs também foram verificados.
 No log versionado: limite 5/300s gera dois alertas de falhas; limite 3/300s gera
-dois alertas de falhas e uma correlação de login. Envio ao GitHub autorizado pelo
-usuário; ainda pendente porque este ambiente não conseguiu conectar à porta 443
-do GitHub. A validação de autenticação do `gh` também falhou; não é possível
-concluir por esta verificação isolada se a credencial funcionaria com a rede liberada.
+dois alertas de falhas e uma correlação de login. Suíte reexecutada em 09/11/2026:
+17 métodos aprovados novamente, incluindo os 27 cenários sintéticos.
+
+Envio autorizado e concluído em 09/11/2026 pela integração GitHub:
+[branch publicada](https://github.com/ge454/mini-soc-analyzer/tree/feat/temporal-detection),
+commit de implementação `8feac6591e15719a920e3c70397d3daa4113b9d0`.
+A árvore publicada foi comparada com o índice Git local: mesmo SHA
+`00cd68770b2e9480cc20ec8429916495a55799ac`, incluindo o registro manual abaixo.
+O presente registro de envio é uma atualização documental posterior.
+A `main` permanece na versão anterior; não houve merge, release ou post.
+O envio pela integração gera SHA/histórico diferente do commit local `486d35d`.
+Sincronizar os históricos com fetch/merge quando o terminal tiver conectividade,
+preservando os commits locais e sem force push.
 
 ## Validação manual relatada pelo usuário — 08/11/2026
 
